@@ -106,3 +106,6 @@ sftp-config.json
 
 ### VisualStudioCode ###
 .vscode/*
+
+### idea ###
+.idea

@@ -28,7 +28,7 @@
     "test": "mocha --require @babel/register --require test/setup.js --recursive test/*.test.js"
   },
   "dependencies": {
-    "autolinker": "^3.0.3",
+    "autolinker": "^3.11.0",
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
