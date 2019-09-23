@@ -36,5 +36,27 @@ export default [
         return this.latlng;
       }
     },
+},
+  {
+    id: 'phone',
+    regex: /((\+\d{2}(-)?)?(((\d{2,3}(-)?)?(\d{11}))|((0\d{2,3}(-)?)?\d{7,8})))|\d{5}/g,
+    Match: class PhoneMatch extends Match {
+      constructor(cfg) {
+        super(cfg);
+        this.phone = cfg.phone;
+      }
+
+      getType() {
+        return 'phone';
+      }
+
+      getNumber(){
+          return this.phone
+      }
+
+      getAnchorText() {
+          return this.phone;
+      }
+    },
   },
 ];
