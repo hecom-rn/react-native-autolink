@@ -49,6 +49,14 @@ export default class Autolink extends PureComponent {
     return fn(text, truncate, truncateChars);
   }
 
+  constructor(props){
+      super(props);
+      // Creates a token with a random UID that should not be guessable or
+      // conflict with other parts of the string.
+      this.uid = Math.floor(Math.random() * 0x10000000000).toString(16);
+      this.tokenRegexp = new RegExp(`(@__ELEMENT-${this.uid}-\\d+__@)`, 'g');
+  }
+
   onPress(match, alertShown) {
     const {
       onPress,
@@ -209,14 +217,9 @@ export default class Autolink extends PureComponent {
       mention = 'twitter';
     }
 
-    // Creates a token with a random UID that should not be guessable or
-    // conflict with other parts of the string.
-    const uid = Math.floor(Math.random() * 0x10000000000).toString(16);
-    const tokenRegexp = new RegExp(`(@__ELEMENT-${uid}-\\d+__@)`, 'g');
-
     const generateToken = (() => {
       let counter = 0;
-      return () => `@__ELEMENT-${uid}-${counter++}__@`; // eslint-disable-line no-plusplus
+      return () => `@__ELEMENT-${this.uid}-${counter++}__@`; // eslint-disable-line no-plusplus
     })();
 
     const matches = {};
@@ -265,7 +268,7 @@ export default class Autolink extends PureComponent {
     }
 
     const nodes = text
-      .split(tokenRegexp)
+      .split(this.tokenRegexp)
       .filter(part => !!part)
       .map((part, index) => {
         const match = matches[part];
