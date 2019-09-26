@@ -200,6 +200,7 @@ export default class Autolink extends PureComponent {
       twitter,
       url,
       webFallback,
+      matchers: customMatchers,
       ...other
     } = this.props;
 
@@ -239,7 +240,7 @@ export default class Autolink extends PureComponent {
       });
 
       // Custom matchers
-      matchers.forEach(({ id, regex, Match }) => {
+      [...matchers, ...customMatchers].forEach(({ id, regex, Match }) => {
         // eslint-disable-next-line react/destructuring-assignment
         if (this.props[id]) {
           text = text.replace(regex, (...args) => {
@@ -309,6 +310,7 @@ Autolink.defaultProps = {
   twitter: false,
   url: true,
   webFallback: Platform.OS !== 'ios', // iOS requires LSApplicationQueriesSchemes for Linking.canOpenURL
+  matchers: [],
 };
 
 Autolink.propTypes = {
@@ -356,4 +358,9 @@ Autolink.propTypes = {
     }),
   ]),
   webFallback: PropTypes.bool,
+  matchers: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      regex: PropTypes.string,
+      match: PropTypes.object
+  }))
 };
