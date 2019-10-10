@@ -53,7 +53,8 @@ export default class Autolink extends PureComponent {
       super(props);
       // Creates a token with a random UID that should not be guessable or
       // conflict with other parts of the string.
-      this.uid = Math.floor(Math.random() * 0x10000000000).toString(16);
+      // 注意UID 不要和自定义的matcher冲突
+      this.uid = Math.floor(Math.random() * 0x1000).toString(16);
       this.tokenRegexp = new RegExp(`(@__ELEMENT-${this.uid}-\\d+__@)`, 'g');
   }
 
