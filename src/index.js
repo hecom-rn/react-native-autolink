@@ -226,23 +226,6 @@ export default class Autolink extends PureComponent {
     const matches = {};
 
     try {
-      text = Autolinker.link(text || '', {
-        email,
-        hashtag,
-        mention,
-        phone,
-        urls: url,
-        stripPrefix,
-        stripTrailingSlash,
-        replaceFn: (match) => {
-          const token = generateToken();
-
-          matches[token] = match;
-
-          return token;
-        },
-      });
-
       // Custom matchers
       [...matchers, ...customMatchers].forEach(({ id, regex, Match }) => {
         // eslint-disable-next-line react/destructuring-assignment
@@ -261,6 +244,23 @@ export default class Autolink extends PureComponent {
             return token;
           });
         }
+      });
+
+      text = Autolinker.link(text || '', {
+        email,
+        hashtag,
+        mention,
+        phone,
+        urls: url,
+        stripPrefix,
+        stripTrailingSlash,
+        replaceFn: (match) => {
+          const token = generateToken();
+
+          matches[token] = match;
+
+          return token;
+        },
       });
     } catch (e) {
       console.warn(e); // eslint-disable-line no-console
