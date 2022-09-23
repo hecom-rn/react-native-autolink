@@ -4,7 +4,7 @@ import React, {
 import PropTypes from 'prop-types';
 import { Icon } from 'core/common';
 
-import {View, Image, StyleSheet, Animated, Text, TouchableOpacity} from 'react-native';
+import { View, Image, StyleSheet, Animated, Text, TouchableOpacity, ImageProps } from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
         style: Text.propTypes.style,
@@ -28,6 +28,11 @@ export default class CollapsibleText extends Component {
         this.measureFlag = true;
     }
 
+    componentDidUpdate(prevProps: Readonly<{  }>, prevState: Readonly<{}>, snapshot?: any) {
+        if(prevProps.children!=this.props.children){
+            this.measureFlag = true;
+        }
+    }
 
     _onTextLayout(event){
         if(this.measureFlag){
@@ -38,6 +43,7 @@ export default class CollapsibleText extends Component {
                 this.mixHeight = event.nativeEvent.layout.height;
                 if(this.mixHeight == this.maxHeight){
                     this.needExpand = false;
+                    this.setState({showExpandText:false})
                 }else{
                     this.needExpand = true;
                     this.setState({showExpandText:true})
@@ -64,10 +70,10 @@ export default class CollapsibleText extends Component {
             <TouchableOpacity
                 onPress={this._onPressExpand.bind(this)}>
                 <Text
-                style={[this.props.style,styles.expandText,expandTextStyle]}>
-                {btnTitle}
-                <Icon name={iconName} color={'#666666'} size={12} />
-            </Text>
+                    style={[this.props.style,styles.expandText,expandTextStyle]}>
+                    {btnTitle}
+                    <Icon name={iconName} color={'#666666'} size={12} />
+                </Text>
             </TouchableOpacity>
         ) : null;
         return (
@@ -91,3 +97,4 @@ const styles = StyleSheet.create({
         marginTop:0,
     }
 });
+1
