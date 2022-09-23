@@ -3,7 +3,7 @@
   "version": "1.8.1",
   "description": "Autolinking component for React Native",
   "author": "Josh Swan <josh@disruptivelabs.io>",
-  "main": "src/index.js",
+  "main": "src/index.tsx",
   "license": "MIT",
   "repository": {
     "type": "git",

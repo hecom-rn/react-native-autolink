@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import * as Truncate from './truncate';
 import matchers from './matchers';
+import CollapsibleText from './CollapsibleText';
 
 const tagBuilder = new AnchorTagBuilder();
 
@@ -291,11 +292,31 @@ export default class Autolink extends PureComponent {
         }
       });
 
-    return createElement(Text, {
-      ref: (component) => { this._root = component; }, // eslint-disable-line no-underscore-dangle
-      style,
-      ...other,
-    }, ...nodes);
+    return (
+        this.props.collapsibleTruncate
+            ?(<CollapsibleText
+            ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
+            style={style}
+            numberOfLines= { this.props.collapsibleTruncate }
+            {...other}
+          >
+            {nodes}
+          </CollapsibleText>)
+            : (<Text
+                ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
+                style={style}
+                numberOfLines= { 2 }
+                {...other}
+            >
+              {nodes}
+            </Text>)
+    );
+    // return createElement(Text, {
+    //   ref: (component) => { this._root = component; }, // eslint-disable-line no-underscore-dangle
+    //   style,
+    //   ...other,
+    //   numberOfLines:1,
+    // }, ...nodes);
   }
 }
 
@@ -315,9 +336,11 @@ Autolink.defaultProps = {
   url: true,
   webFallback: Platform.OS !== 'ios', // iOS requires LSApplicationQueriesSchemes for Linking.canOpenURL
   matchers: [],
+  collapsibleTruncate: 0,
 };
 
 Autolink.propTypes = {
+  collapsibleTruncate: PropTypes.number,
   email: PropTypes.bool,
   hashtag: PropTypes.oneOf([
     false,
