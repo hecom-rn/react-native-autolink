@@ -93,7 +93,7 @@ export default class CollapsibleText extends Component {
 
 const styles = StyleSheet.create({
     expandText: {
-        color:'#666',
+        color:'#1890FF',
         marginTop:0,
     }
 });

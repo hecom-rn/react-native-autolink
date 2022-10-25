@@ -24,7 +24,7 @@ const tagBuilder = new AnchorTagBuilder();
 
 const styles = StyleSheet.create({
   link: {
-    color: '#0E7AFE',
+    color: '#1890FF',
   },
 });
 
@@ -211,6 +211,7 @@ export default class Autolink extends PureComponent {
       url,
       webFallback,
       matchers: customMatchers,
+      expandTextStyle,
       ...other
     } = this.props;
 
@@ -297,6 +298,7 @@ export default class Autolink extends PureComponent {
             ?(<CollapsibleText
             ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
             style={style}
+            expandTextStyle={expandTextStyle}
             numberOfLines= { this.props.collapsibleTruncate }
             {...other}
           >
@@ -389,5 +391,6 @@ Autolink.propTypes = {
       id: PropTypes.string,
       regex: PropTypes.string,
       match: PropTypes.object
-  }))
+  })),
+  expandTextStyle: Text.propTypes.style,
 };
