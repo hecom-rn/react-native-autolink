@@ -204,6 +204,7 @@ export default class Autolink extends PureComponent {
       stripTrailingSlash,
       style,
       text,
+      text:rawText,
       truncate,
       truncateChars,
       truncateLocation,
@@ -296,14 +297,15 @@ export default class Autolink extends PureComponent {
     return (
         this.props.collapsibleTruncate
             ?(<CollapsibleText
-            ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
-            style={style}
-            expandTextStyle={expandTextStyle}
-            numberOfLines= { this.props.collapsibleTruncate }
-            {...other}
-          >
-            {nodes}
-          </CollapsibleText>)
+                ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
+                style={style}
+                expandTextStyle={expandTextStyle}
+                numberOfLines= { this.props.collapsibleTruncate }
+                rawText={rawText}
+                {...other}
+            >
+              {nodes}
+            </CollapsibleText>)
             : (<Text
                 ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
                 style={style}
