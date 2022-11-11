@@ -309,7 +309,6 @@ export default class Autolink extends PureComponent {
             : (<Text
                 ref={(ref) => { this._root = ref; }} // eslint-disable-line no-underscore-dangle
                 style={style}
-                numberOfLines= { 2 }
                 {...other}
             >
               {nodes}
