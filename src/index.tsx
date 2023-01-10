@@ -351,7 +351,7 @@ Autolink.propTypes = {
     'twitter',
   ]),
   latlng: PropTypes.bool,
-  linkStyle: Text.propTypes.style, // eslint-disable-line react/no-typos
+  // linkStyle: Text.propTypes.style, // eslint-disable-line react/no-typos
   mention: PropTypes.oneOf([
     false,
     'instagram',
@@ -368,7 +368,7 @@ Autolink.propTypes = {
   showAlert: PropTypes.bool,
   stripPrefix: PropTypes.bool,
   stripTrailingSlash: PropTypes.bool,
-  style: Text.propTypes.style, // eslint-disable-line react/no-typos
+  // style: Text.propTypes.style, // eslint-disable-line react/no-typos
   text: PropTypes.string.isRequired,
   truncate: PropTypes.number,
   truncateChars: PropTypes.string,
@@ -392,5 +392,5 @@ Autolink.propTypes = {
       regex: PropTypes.string,
       match: PropTypes.object
   })),
-  expandTextStyle: Text.propTypes.style,
+  // expandTextStyle: Text.propTypes.style,
 };

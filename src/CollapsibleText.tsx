@@ -2,13 +2,13 @@ import React, {
     Component,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'core/common';
+import Icon from 'core/common/Icon';
 
 import { View, Image, StyleSheet, Animated, Text, TouchableOpacity, ImageProps } from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
-        style: Text.propTypes.style,
-        expandTextStyle:Text.propTypes.style,
+        // style: Text.propTypes.style,
+        // expandTextStyle:Text.propTypes.style,
         numberOfLines: PropTypes.number
     }
     constructor(props){
