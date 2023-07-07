@@ -9,7 +9,8 @@ export default class CollapsibleText extends Component {
     static propTypes = {
         // style: Text.propTypes.style,
         // expandTextStyle:Text.propTypes.style,
-        numberOfLines: PropTypes.number
+        numberOfLines: PropTypes.number,
+        rawText: PropTypes.string
     }
     constructor(props){
         super(props);
@@ -25,30 +26,27 @@ export default class CollapsibleText extends Component {
         this.numberOfLines = props.numberOfLines;
         /** 文本是否需要展开收起功能：（实际文字内容是否超出numberOfLines限制） */
         this.needExpand = true;
-        this.measureFlag = true;
     }
 
-    componentDidUpdate(prevProps: Readonly<{  }>, prevState: Readonly<{}>, snapshot?: any) {
-        if(prevProps.children!=this.props.children){
-            this.measureFlag = true;
-        }
-    }
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.rawText!==this.props.rawText){
+            this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+        }}
 
     _onTextLayout(event){
-        if(this.measureFlag){
+        if(this.state.measureFlag){
             if(this.state.expanded){
                 this.maxHeight = event.nativeEvent.layout.height;
                 this.setState({expanded:false,numberOfLines:this.numberOfLines});
             }else{
                 this.mixHeight = event.nativeEvent.layout.height;
-                if(this.mixHeight == this.maxHeight){
+                if (this.maxHeight - this.mixHeight <1){
                     this.needExpand = false;
-                    this.setState({showExpandText:false})
+                    this.setState({showExpandText:false,measureFlag:false})
                 }else{
                     this.needExpand = true;
-                    this.setState({showExpandText:true})
+                    this.setState({showExpandText:true,measureFlag:false})
                 }
-                this.measureFlag = false;
             }
         }
 
