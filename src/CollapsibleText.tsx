@@ -4,7 +4,17 @@ import React, {
 import PropTypes from 'prop-types';
 import { Icon } from 'core/common';
 
-import { View, Image, StyleSheet, Animated, Text, TouchableOpacity, ImageProps } from 'react-native';
+import {
+    View,
+    Image,
+    StyleSheet,
+    Animated,
+    Text,
+    TouchableOpacity,
+    ImageProps,
+    Dimensions,
+    EmitterSubscription
+} from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
         style: Text.propTypes.style,
@@ -12,6 +22,9 @@ export default class CollapsibleText extends Component {
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
     }
+
+    changEmitter: EmitterSubscription;
+
     constructor(props){
         super(props);
         this.state = {
@@ -32,6 +45,18 @@ export default class CollapsibleText extends Component {
         if(nextProps.rawText!==this.props.rawText){
             this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
         }}
+
+    componentDidMount() {
+        this.changEmitter = Dimensions.addEventListener('change', this._onOrientationChange);
+    }
+
+    componentWillUnmount() {
+        this.changEmitter?.remove();
+    }
+
+    _onOrientationChange = (e) => {
+        this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+    };
 
     _onTextLayout(event){
         if(this.state.measureFlag){
