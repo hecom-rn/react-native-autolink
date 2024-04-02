@@ -19,6 +19,7 @@ export default class CollapsibleText extends Component {
     static propTypes = {
         style: Text.propTypes.style,
         expandTextStyle:Text.propTypes.style,
+        expandBorderStyle: View.propTypes.style,
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
     }
@@ -86,13 +87,13 @@ export default class CollapsibleText extends Component {
     }
 
     render() {
-        const { numberOfLines, onLayout, expandTextStyle, ...rest } = this.props;
+        const { numberOfLines, onLayout, expandTextStyle, expandBorderStyle, ...rest } = this.props;
         const btnTitle = this.state.expanded ? '收起' : '全部';
         const iconName = this.state.expanded ? 'e605' : 'e606';
         let expandText = this.state.showExpandText?(
             <TouchableOpacity
                 onPress={this._onPressExpand.bind(this)}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={[{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }, expandBorderStyle]}>
                     <Text
                         style={[this.props.style,styles.expandText,expandTextStyle]}>
                         {btnTitle}
