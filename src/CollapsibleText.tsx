@@ -11,7 +11,7 @@ import {
     Animated,
     Text,
     TouchableOpacity,
-    ImageProps,
+    ViewStyle,
     Dimensions,
     EmitterSubscription
 } from 'react-native';
@@ -19,7 +19,7 @@ export default class CollapsibleText extends Component {
     static propTypes = {
         style: Text.propTypes.style,
         expandTextStyle:Text.propTypes.style,
-        expandBorderStyle: View.propTypes.style,
+        expandBorderStyle: ViewStyle,
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
     }
