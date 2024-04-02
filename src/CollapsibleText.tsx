@@ -92,11 +92,13 @@ export default class CollapsibleText extends Component {
         let expandText = this.state.showExpandText?(
             <TouchableOpacity
                 onPress={this._onPressExpand.bind(this)}>
-                <Text
-                    style={[this.props.style,styles.expandText,expandTextStyle]}>
-                    {btnTitle}
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <Text
+                        style={[this.props.style,styles.expandText,expandTextStyle]}>
+                        {btnTitle}
+                    </Text>
                     <Icon name={iconName} color={'#666666'} size={12} />
-                </Text>
+                </View>
             </TouchableOpacity>
         ) : null;
         return (
