@@ -104,13 +104,15 @@ export default class CollapsibleText extends Component {
         ) : null;
         return (
             <View>
-                <Text
-                    numberOfLines={this.state.numberOfLines}
-                    onLayout={this._onTextLayout.bind(this)}
-                    {...rest}
-                >
-                    {this.props.children}
-                </Text>
+                <View pointerEvents={'none'}>
+                    <Text
+                        numberOfLines={this.state.numberOfLines}
+                        onLayout={this._onTextLayout.bind(this)}
+                        {...rest}
+                    >
+                        {this.props.children}
+                    </Text>
+                </View>
                 {expandText}
             </View>
         );
