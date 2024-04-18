@@ -17,8 +17,8 @@ import {
 } from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
-        style: Text.propTypes.style,
-        expandTextStyle:Text.propTypes.style,
+        style: Text.propTypes?.style,
+        expandTextStyle:Text.propTypes?.style,
         expandBorderStyle: ViewStyle,
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
@@ -66,7 +66,7 @@ export default class CollapsibleText extends Component {
                 this.setState({expanded:false,numberOfLines:this.numberOfLines});
             }else{
                 this.mixHeight = event.nativeEvent.layout.height;
-                if (this.maxHeight - this.mixHeight <1){
+                if (Math.abs(this.maxHeight - this.mixHeight) <1){
                     this.needExpand = false;
                     this.setState({showExpandText:false,measureFlag:false})
                 }else{
