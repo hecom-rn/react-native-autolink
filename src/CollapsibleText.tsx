@@ -59,25 +59,6 @@ export default class CollapsibleText extends Component {
         this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
     };
 
-    _onTextLayout(event){
-        if(this.state.measureFlag){
-            if(this.state.expanded){
-                this.maxHeight = event.nativeEvent.layout.height;
-                this.setState({expanded:false,numberOfLines:this.numberOfLines});
-            }else{
-                this.mixHeight = event.nativeEvent.layout.height;
-                if (Math.abs(this.maxHeight - this.mixHeight) <1){
-                    this.needExpand = false;
-                    this.setState({showExpandText:false,measureFlag:false})
-                }else{
-                    this.needExpand = true;
-                    this.setState({showExpandText:true,measureFlag:false})
-                }
-            }
-        }
-
-    }
-
     _onPressExpand(){
         if(!this.state.expanded){
             this.setState({numberOfLines:null,expanded:true})
@@ -85,6 +66,16 @@ export default class CollapsibleText extends Component {
             this.setState({numberOfLines:this.numberOfLines,expanded:false})
         }
     }
+
+    onTextLayout = (event) => {
+        if (this.state.measureFlag) {
+            if (event?.nativeEvent?.lines?.length > this.numberOfLines) {
+                this.setState({ expanded:false, showExpandText: true, numberOfLines: this.numberOfLines, measureFlag: false});
+            } else {
+                this.setState({ showExpandText: false, numberOfLines:this.numberOfLines});
+            }
+        }
+    };
 
     render() {
         const { numberOfLines, onLayout, expandTextStyle, expandBorderStyle, ...rest } = this.props;
@@ -106,7 +97,7 @@ export default class CollapsibleText extends Component {
             <View>
                 <Text
                     numberOfLines={this.state.numberOfLines}
-                    onLayout={this._onTextLayout.bind(this)}
+                    onTextLayout={this.onTextLayout}
                     {...rest}
                 >
                     {this.props.children}
