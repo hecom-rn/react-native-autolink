@@ -4,14 +4,28 @@ import React, {
 import PropTypes from 'prop-types';
 import Icon from 'core/common/Icon';
 
-import { View, Image, StyleSheet, Animated, Text, TouchableOpacity, ImageProps } from 'react-native';
+import {
+    View,
+    Image,
+    StyleSheet,
+    Animated,
+    Text,
+    TouchableOpacity,
+    ViewStyle,
+    Dimensions,
+    EmitterSubscription
+} from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
-        // style: Text.propTypes.style,
-        // expandTextStyle:Text.propTypes.style,
+        // style: Text.propTypes?.style,
+        // expandTextStyle:Text.propTypes?.style,
+        expandBorderStyle: ViewStyle,
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
     }
+
+    changEmitter: EmitterSubscription;
+
     constructor(props){
         super(props);
         this.state = {
@@ -33,24 +47,17 @@ export default class CollapsibleText extends Component {
             this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
         }}
 
-    _onTextLayout(event){
-        if(this.state.measureFlag){
-            if(this.state.expanded){
-                this.maxHeight = event.nativeEvent.layout.height;
-                this.setState({expanded:false,numberOfLines:this.numberOfLines});
-            }else{
-                this.mixHeight = event.nativeEvent.layout.height;
-                if (this.maxHeight - this.mixHeight <1){
-                    this.needExpand = false;
-                    this.setState({showExpandText:false,measureFlag:false})
-                }else{
-                    this.needExpand = true;
-                    this.setState({showExpandText:true,measureFlag:false})
-                }
-            }
-        }
-
+    componentDidMount() {
+        this.changEmitter = Dimensions.addEventListener('change', this._onOrientationChange);
     }
+
+    componentWillUnmount() {
+        this.changEmitter?.remove();
+    }
+
+    _onOrientationChange = (e) => {
+        this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+    };
 
     _onPressExpand(){
         if(!this.state.expanded){
@@ -60,25 +67,37 @@ export default class CollapsibleText extends Component {
         }
     }
 
+    onTextLayout = (event) => {
+        if (this.state.measureFlag) {
+            if (event?.nativeEvent?.lines?.length > this.numberOfLines) {
+                this.setState({ expanded:false, showExpandText: true, numberOfLines: this.numberOfLines, measureFlag: false});
+            } else {
+                this.setState({ showExpandText: false, numberOfLines:this.numberOfLines});
+            }
+        }
+    };
+
     render() {
-        const { numberOfLines, onLayout, expandTextStyle, ...rest } = this.props;
+        const { numberOfLines, onLayout, expandTextStyle, expandBorderStyle, ...rest } = this.props;
         const btnTitle = this.state.expanded ? '收起' : '全部';
         const iconName = this.state.expanded ? 'e605' : 'e606';
         let expandText = this.state.showExpandText?(
             <TouchableOpacity
                 onPress={this._onPressExpand.bind(this)}>
-                <Text
-                    style={[this.props.style,styles.expandText,expandTextStyle]}>
-                    {btnTitle}
+                <View style={[{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }, expandBorderStyle]}>
+                    <Text
+                        style={[this.props.style,styles.expandText,expandTextStyle]}>
+                        {btnTitle}
+                    </Text>
                     <Icon name={iconName} color={'#666666'} size={12} />
-                </Text>
+                </View>
             </TouchableOpacity>
         ) : null;
         return (
             <View>
                 <Text
                     numberOfLines={this.state.numberOfLines}
-                    onLayout={this._onTextLayout.bind(this)}
+                    onTextLayout={this.onTextLayout}
                     {...rest}
                 >
                     {this.props.children}
