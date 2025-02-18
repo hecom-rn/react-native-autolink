@@ -56,7 +56,7 @@ export default class CollapsibleText extends Component {
     }
 
     _onOrientationChange = (e) => {
-        this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+        this.setState({expanded:true, numberOfLines:this.state.numberOfLines ? null : this.numberOfLines, showExpandText:false, measureFlag:true});
     };
 
     _onPressExpand(){
