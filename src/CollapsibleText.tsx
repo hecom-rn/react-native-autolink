@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'core/common';
+import Util from 'core/util';
 
 import {
     View,
@@ -13,7 +14,8 @@ import {
     TouchableOpacity,
     ViewStyle,
     Dimensions,
-    EmitterSubscription
+    EmitterSubscription,
+    Platform
 } from 'react-native';
 export default class CollapsibleText extends Component {
     static propTypes = {
@@ -26,8 +28,13 @@ export default class CollapsibleText extends Component {
 
     changEmitter: EmitterSubscription;
 
+    textKey;
+
     constructor(props){
         super(props);
+        if (Platform.OS === 'harmony') {
+            this.textKey = 1;
+        }
         this.state = {
             /** 文本是否展开 */
             expanded:true,
@@ -55,9 +62,12 @@ export default class CollapsibleText extends Component {
         this.changEmitter?.remove();
     }
 
-    _onOrientationChange = (e) => {
-        this.setState({expanded:true, numberOfLines:this.state.numberOfLines ? null : this.numberOfLines, showExpandText:false, measureFlag:true});
-    };
+    _onOrientationChange = Util.Debounce((e) => {
+        if (this.textKey > 0) {
+            this.textKey += 1;
+        }
+        this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+    }, 500);
 
     _onPressExpand(){
         if(!this.state.expanded){
@@ -93,9 +103,11 @@ export default class CollapsibleText extends Component {
                 </View>
             </TouchableOpacity>
         ) : null;
+        const textProps = this.textKey > 0 ? { key: this.textKey } : {};
         return (
             <View>
                 <Text
+                    {...textProps}
                     numberOfLines={this.state.numberOfLines}
                     onTextLayout={this.onTextLayout}
                     {...rest}
