@@ -1,41 +1,41 @@
+import { Icon } from 'core/common';
+import PropTypes from 'prop-types';
 import React, {
     Component,
 } from 'react';
-import PropTypes from 'prop-types';
-import { Icon } from 'core/common';
 
 import {
-    View,
-    Image,
+    Dimensions,
+    EmitterSubscription,
     StyleSheet,
-    Animated,
     Text,
     TouchableOpacity,
-    ViewStyle,
-    Dimensions,
-    EmitterSubscription
+    View
 } from 'react-native';
 export default class CollapsibleText extends Component {
+    static _instanceCount = 0;
+
     static propTypes = {
         style: Text.propTypes?.style,
-        expandTextStyle:Text.propTypes?.style,
-        expandBorderStyle: ViewStyle,
+        expandTextStyle: Text.propTypes?.style,
+        expandBorderStyle: Object,
         numberOfLines: PropTypes.number,
         rawText: PropTypes.string
     }
 
     changEmitter: EmitterSubscription;
 
-    constructor(props){
+    constructor(props) {
         super(props);
+        this._instanceId = ++CollapsibleText._instanceCount;
         this.state = {
             /** 文本是否展开 */
-            expanded:true,
-            numberOfLines:null,
+            expanded: true,
+            numberOfLines: null,
             /** 展开收起文字是否处于显示状态 */
-            showExpandText:false,
+            showExpandText: false,
             /** 是否处于测量阶段 */
-            measureFlag:true
+            measureFlag: true
         }
         this.numberOfLines = props.numberOfLines;
         /** 文本是否需要展开收起功能：（实际文字内容是否超出numberOfLines限制） */
@@ -43,9 +43,10 @@ export default class CollapsibleText extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if(nextProps.rawText!==this.props.rawText){
-            this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
-        }}
+        if (nextProps.rawText !== this.props.rawText) {
+            this.setState({ expanded: true, numberOfLines: null, showExpandText: false, measureFlag: true });
+        }
+    }
 
     componentDidMount() {
         this.changEmitter = Dimensions.addEventListener('change', this._onOrientationChange);
@@ -56,23 +57,23 @@ export default class CollapsibleText extends Component {
     }
 
     _onOrientationChange = (e) => {
-        this.setState({expanded:true, numberOfLines:null, showExpandText:false, measureFlag:true});
+        this.setState({ expanded: true, numberOfLines: null, showExpandText: false, measureFlag: true });
     };
 
-    _onPressExpand(){
-        if(!this.state.expanded){
-            this.setState({numberOfLines:null,expanded:true})
-        }else{
-            this.setState({numberOfLines:this.numberOfLines,expanded:false})
+    _onPressExpand() {
+        if (!this.state.expanded) {
+            this.setState({ numberOfLines: null, expanded: true })
+        } else {
+            this.setState({ numberOfLines: this.numberOfLines, expanded: false })
         }
     }
 
     onTextLayout = (event) => {
         if (this.state.measureFlag) {
             if (event?.nativeEvent?.lines?.length > this.numberOfLines) {
-                this.setState({ expanded:false, showExpandText: true, numberOfLines: this.numberOfLines, measureFlag: false});
+                this.setState({ expanded: false, showExpandText: true, numberOfLines: this.numberOfLines, measureFlag: false });
             } else {
-                this.setState({ showExpandText: false, numberOfLines:this.numberOfLines});
+                this.setState({ showExpandText: false, numberOfLines: this.numberOfLines });
             }
         }
     };
@@ -81,12 +82,12 @@ export default class CollapsibleText extends Component {
         const { numberOfLines, onLayout, expandTextStyle, expandBorderStyle, ...rest } = this.props;
         const btnTitle = this.state.expanded ? '收起' : '全部';
         const iconName = this.state.expanded ? 'e605' : 'e606';
-        let expandText = this.state.showExpandText?(
+        let expandText = this.state.showExpandText ? (
             <TouchableOpacity
                 onPress={this._onPressExpand.bind(this)}>
                 <View style={[{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }, expandBorderStyle]}>
                     <Text
-                        style={[this.props.style,styles.expandText,expandTextStyle]}>
+                        style={[this.props.style, styles.expandText, expandTextStyle]}>
                         {btnTitle}
                     </Text>
                     <Icon name={iconName} color={'#666666'} size={12} />
@@ -96,6 +97,7 @@ export default class CollapsibleText extends Component {
         return (
             <View>
                 <Text
+                    key={`collapsible-text-${this._instanceId}-${this.state.numberOfLines}`}
                     numberOfLines={this.state.numberOfLines}
                     onTextLayout={this.onTextLayout}
                     {...rest}
@@ -110,7 +112,7 @@ export default class CollapsibleText extends Component {
 
 const styles = StyleSheet.create({
     expandText: {
-        color:'#1890FF',
-        marginTop:0,
+        color: '#1890FF',
+        marginTop: 0,
     }
 });
