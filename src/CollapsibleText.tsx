@@ -7,6 +7,7 @@ import React, {
 import {
     Dimensions,
     EmitterSubscription,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -28,17 +29,15 @@ export default class CollapsibleText extends Component {
     constructor(props) {
         super(props);
         this._instanceId = ++CollapsibleText._instanceCount;
+        this._isHarmony = Platform.OS === 'harmony';
+        this._fullHeight = null;
         this.state = {
-            /** 文本是否展开 */
             expanded: true,
             numberOfLines: null,
-            /** 展开收起文字是否处于显示状态 */
             showExpandText: false,
-            /** 是否处于测量阶段 */
             measureFlag: true
         }
         this.numberOfLines = props.numberOfLines;
-        /** 文本是否需要展开收起功能：（实际文字内容是否超出numberOfLines限制） */
         this.needExpand = true;
     }
 
@@ -78,6 +77,22 @@ export default class CollapsibleText extends Component {
         }
     };
 
+    _onHarmonyLayout = (event) => {
+        if (!this.state.measureFlag) return;
+        const { height } = event.nativeEvent.layout;
+        if (this.state.numberOfLines == null) {
+            this._fullHeight = height;
+            this.setState({ numberOfLines: this.numberOfLines });
+        } else {
+            if (this._fullHeight != null && this._fullHeight > height + 1) {
+                this.setState({ expanded: false, showExpandText: true, measureFlag: false });
+            } else {
+                this.setState({ showExpandText: false, measureFlag: false });
+            }
+            this._fullHeight = null;
+        }
+    };
+
     render() {
         const { numberOfLines, onLayout, expandTextStyle, expandBorderStyle, ...rest } = this.props;
         const btnTitle = this.state.expanded ? '收起' : '全部';
@@ -99,7 +114,9 @@ export default class CollapsibleText extends Component {
                 <Text
                     key={`collapsible-text-${this._instanceId}-${this.state.numberOfLines}`}
                     numberOfLines={this.state.numberOfLines}
-                    onTextLayout={this.onTextLayout}
+                    {...(this._isHarmony
+                        ? { onLayout: this._onHarmonyLayout }
+                        : { onTextLayout: this.onTextLayout })}
                     {...rest}
                 >
                     {this.props.children}
